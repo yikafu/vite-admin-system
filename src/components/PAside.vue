@@ -1,7 +1,7 @@
 <template>
   <!-- 遍历路由 -->
   <el-menu router>
-    <template v-for="item in $router" :key="item.path">
+    <template v-for="item in router" :key="item.path">
       <!-- 没有子节点的 -->
       <template v-if="!item.children">
         <el-menu-item :index="item.path">
@@ -35,6 +35,5 @@
 <script setup>
 import { useRouter } from "vue-router";
 // 获取所有路由
-const $router = useRouter().options.routes;
-console.log($router);
+const router = useRouter().options.routes;
 </script>

@@ -5,7 +5,7 @@ const routes = [
     path: '/',
     name: 'dashboard',
     component: () => import('../views/dashboard/index.vue'),
-    meta: { title: '仪表盘', icon: 'DataAnalysis' }
+    meta: { title: '首页', icon: 'DataAnalysis' }
   },
   {
     path: '/work',

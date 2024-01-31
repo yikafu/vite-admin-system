@@ -6,6 +6,7 @@
     :effect="tag.name === route.meta.title ? 'dark' : 'plain'"
     :closable="tag.name !== '首页'"
     :type="tag.type"
+    :id="tag.name === '首页' ? 'shouye' : ''"
     @click="handleClick(tag)"
     @close="handleClose(tag)"
   >
@@ -57,8 +58,21 @@ function handleClick(e) {
 
 <style scoped>
 .el-tag {
-  margin: 10px 5px;
+  margin: 0px 3px;
+  padding: 6px;
+  min-width: 60px;
+  max-width: 80px;
+  height: 30px;
 }
+
+#shouye {
+  margin: 0px;
+  padding: 6px;
+  min-width: 60px;
+  max-width: 80px;
+  height: 30px;
+}
+
 .el-tag:hover {
   cursor: pointer;
 }

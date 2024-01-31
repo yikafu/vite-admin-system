@@ -5,6 +5,7 @@
     </el-aside>
     <el-container>
       <el-header><PHeader /></el-header>
+      <div style="margin-left: 5px;"><PTag /></div>
       <el-main>
         <PMain />
       </el-main>
@@ -16,6 +17,7 @@
 import PHeader from "./components/PHeader.vue";
 import PAside from "./components/PAside.vue";
 import PMain from "./components/PMain.vue";
+import PTag from './components/PTag.vue';
 </script>
 
 <style>

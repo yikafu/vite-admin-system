@@ -1,12 +1,7 @@
 <template>
-  <PTag />
   <router-view />
 </template>
 
-<script setup>
-import PTag from './PTag.vue';
-</script>
+<script setup></script>
 
-<style>
-
-</style>
+<style></style>

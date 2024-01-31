@@ -33,7 +33,9 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 // 获取所有路由
 const router = useRouter().options.routes;
+const route = useRoute();
+const currentRoute = route.path;
 </script>

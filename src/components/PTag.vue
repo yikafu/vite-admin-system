@@ -17,7 +17,7 @@
 <script setup>
 import { watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useTagdataStore } from "../store/useTagdata";
+import { useTagdataStore } from "@/store/useTagdata";
 
 const route = useRoute();
 const router = useRouter();

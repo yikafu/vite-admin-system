@@ -1,73 +1,63 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
   {
-    path: '/',
-    name: 'dashboard',
-    component: () => import('../views/dashboard/index.vue'),
-    meta: { title: '首页', icon: 'DataAnalysis' }
+    path: "/",
+    name: "dashboard",
+    component: () => import("views/dashboard.vue"),
+    meta: { title: "首页", icon: "DataAnalysis" },
   },
   {
-    path: '/work',
-    name: 'work',
-    component: () => import('../views/work/index.vue'),
-    meta: { title: '工作台', icon: 'Suitcase' }
+    path: "/work",
+    name: "work",
+    component: () => import("views/work.vue"),
+    meta: { title: "工作台", icon: "Suitcase" },
   },
   {
-    path: '/metarial',
-    name: 'metarial',
-    component: () => import('../views/metarial/index.vue'),
-    meta: { title: '素材管理', icon: 'Picture' }
+    path: "/metarial",
+    name: "metarial",
+    component: () => import("views/metarial.vue"),
+    meta: { title: "素材管理", icon: "Picture" },
   },
   {
-    path: '/commodity',
-    name: 'commodity',
-    component: () => import('../views/commodity/index.vue'),
-    meta: { title: '商品管理', icon: 'Goods' }
+    path: "/commodity",
+    name: "commodity",
+    component: () => import("views/commodity.vue"),
+    meta: { title: "商品管理", icon: "Goods" },
   },
   {
-    path: '/permissions',
-    name: 'permissions',
-    meta: { title: '权限设置', icon: 'SetUp' },
+    path: "/user",
+    name: "user",
+    component: () => import("views/user.vue"),
+    meta: { title: "用户管理", icon: "User" },
+  },
+  {
+    path: "/system",
+    name: "system",
+    meta: { title: "更多", icon: "More" },
     children: [
       {
-        path: 'quanxiang',
-        component: () => import('../views/permissions/quanxiang.vue'),
-        meta: { title: '权限管理', icon: 'Medal' }
+        path: "setting",
+        component: () => import("views/setting.vue"),
+        meta: { title: "系统设置", icon: "Tools" },
       },
       {
-        path: 'role',
-        component: () => import('../views/permissions/role.vue'),
-        meta: { title: '角色管理', icon: 'User' }
-      }
-    ]
+        path: "log",
+        component: () => import("views/log.vue"),
+        meta: { title: "系统日志", icon: "Document" },
+      },
+    ],
   },
   {
-    path: '/system',
-    name: 'system',
-    meta: { title: '更多', icon: 'More' },
-    children: [
-      {
-        path: 'setting',
-        component: () => import('../views/system/setting.vue'),
-        meta: { title: '系统设置', icon: 'Tools' }
-      },
-      {
-        path: 'log',
-        component: () => import('../views/system/log.vue'),
-        meta: { title: '系统日志', icon: 'Document' }
-      }
-    ]
-  },{
-    path: '/about',
-    name: 'about',
-    component: () => import('../views/about/index.vue'),
-    meta: { title: '关于', icon: 'InfoFilled' }
-  }
-]
+    path: "/about",
+    name: "about",
+    component: () => import("views/about.vue"),
+    meta: { title: "关于", icon: "InfoFilled" },
+  },
+];
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

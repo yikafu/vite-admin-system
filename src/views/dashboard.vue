@@ -6,7 +6,7 @@
         <div id="title">今日访问量</div>
         <div id="data">
           1000
-          <img src="../../../public/shop.svg" alt="" />
+          <img src="@/assets/shop.svg" alt="" />
         </div>
       </el-card>
     </el-col>
@@ -15,7 +15,7 @@
         <div id="title">今日下单数</div>
         <div id="data">
           1000
-          <img src="../../../public/sale.svg" alt="" />
+          <img src="@/assets/sale.svg" alt="" />
         </div>
       </el-card>
     </el-col>
@@ -24,7 +24,7 @@
         <div id="title">今日成交数</div>
         <div id="data">
           1000
-          <img src="../../../public/pay.svg" alt="" />
+          <img src="@/assets/pay.svg" alt="" />
         </div>
       </el-card>
     </el-col>
@@ -33,7 +33,7 @@
         <div id="title">今日销售额</div>
         <div id="data">
           1000
-          <img src="../../../public/money.svg" alt="" />
+          <img src="@/assets/money.svg" alt="" />
         </div>
       </el-card>
     </el-col>
@@ -77,7 +77,7 @@ import {
   dashboardChart,
   conversionChart,
   activeUserChart,
-} from "../../data/data.js";
+} from "@/data/dashboard.data.js";
 // 折线图--销售趋势
 const lineEchart = () => {
   const option = {

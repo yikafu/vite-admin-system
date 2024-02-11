@@ -1,57 +1,54 @@
 <template>
-  <el-row>
-    <!-- 添加按钮 -->
-    <el-button type="primary" :icon="Plus" @click="showAdd()" />
-    <!-- 搜索区域 -->
-    <div class="search-area">
-      <el-input
-        v-model="search"
-        placeholder="Please input"
-        class="input-with-select"
-      >
-        <template #prepend>
-          <el-select v-model="select" style="width: 115px">
-            <el-option label="商品名称" value="name" />
-            <el-option label="商品价格" value="price" />
-            <el-option label="商品ID" value="id" />
-          </el-select>
-        </template>
-        <template #append>
-          <el-button :icon="Search" @click="handleSearch()" />
-        </template>
-      </el-input>
+  <el-card>
+    <el-row>
+      <!-- 添加按钮 -->
+      <el-button type="primary" :icon="Plus" @click="showAdd()" />
+      <!-- 搜索区域 -->
+      <div class="search-area">
+        <el-input
+          v-model="search"
+          placeholder="Please input"
+          class="input-with-select"
+        >
+          <template #prepend>
+            <el-select v-model="select" style="width: 115px">
+              <el-option label="商品名称" value="name" />
+              <el-option label="商品价格" value="price" />
+              <el-option label="商品ID" value="id" />
+            </el-select>
+          </template>
+          <template #append>
+            <el-button :icon="Search" @click="handleSearch()" />
+          </template>
+        </el-input>
+      </div>
+    </el-row>
+    <div class="commodity-table">
+      <el-table :data="data" :table-layout="auto" height="100%" stripe>
+        <el-table-column type="index" label="序号" width="70" />
+        <el-table-column prop="name" label="商品名称" />
+        <el-table-column prop="price" label="商品价格" />
+        <el-table-column prop="stock" label="商品库存" />
+        <el-table-column prop="id" label="商品ID" />
+        <el-table-column align="right">
+          <template #default="scope">
+            <el-button
+              size="small"
+              @click="handleEdit(scope.$index, scope.row)"
+            >
+              Edit
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              >Delete</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
-  </el-row>
-  <div class="commodity-table">
-    <el-table :data="data" :table-layout="auto" height="100%" stripe>
-      <el-table-column type="index" label="序号" width="70" />
-      <el-table-column prop="name" label="商品名称" />
-      <el-table-column prop="price" label="商品价格" />
-      <el-table-column prop="stock" label="商品库存" />
-      <el-table-column prop="id" label="商品ID" />
-      <el-table-column align="right">
-        <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-            Edit
-          </el-button>
-          <el-button
-            size="small"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-            >Delete</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
-  <!-- 分页器 -->
-  <el-pagination
-    background
-    layout="prev,pager,next"
-    :total="state.total"
-    @current-change="handleSizeChange"
-    :page-size="10"
-  />
+  </el-card>
   <!-- 编辑页面 -->
   <el-dialog :title="dialogTitle" v-model="dialogVisible">
     <el-form v-model="from" label-width="100px">
@@ -75,7 +72,6 @@
       </el-form-item>
     </el-form>
     <div class="dialog-footer">
-      <el-button @click="handleCancel()">取 消</el-button>
       <el-button
         type="primary"
         v-if="dialogTitle == '添加商品'"
@@ -85,8 +81,17 @@
       <el-button type="primary" v-else @click="handleConfirm()"
         >确 定</el-button
       >
+      <el-button @click="handleCancel()">取 消</el-button>
     </div>
   </el-dialog>
+  <!-- 分页器 -->
+  <el-pagination
+    background
+    layout="prev,pager,next"
+    :total="state.total"
+    @current-change="handleSizeChange"
+    :page-size="10"
+  />
 </template>
 
 <script setup>
@@ -175,9 +180,14 @@ const handleConfirm = () => {
 </script>
 
 <style scoped>
+.el-card {
+  height: 90%;
+  max-height: 90%;
+}
+
 .commodity-table {
   width: 100%;
-  height: 80%;
+  height: 100%;
 }
 
 .el-row {

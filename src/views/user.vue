@@ -1,52 +1,57 @@
 <template>
-  <el-row>
-    <!-- 添加按钮 -->
-    <el-button type="primary" :icon="Plus" @click="showAdd()" />
-    <!-- 搜索区域 -->
-    <div class="search-area">
-      <el-input
-        v-model="search"
-        placeholder="Please input"
-        class="input-with-select"
-      >
-        <template #prepend>
-          <el-select v-model="select" style="width: 115px">
-            <el-option label="姓名" value="name" />
-            <el-option label="性别" value="gender" />
-            <el-option label="年龄" value="age" />
-            <el-option label="地区" value="area" />
-            <el-option label="邮箱" value="email" />
-          </el-select>
-        </template>
-        <template #append>
-          <el-button :icon="Search" @click="handleSearch()" />
-        </template>
-      </el-input>
+  <el-card>
+    <el-row>
+      <!-- 添加按钮 -->
+      <el-button type="primary" :icon="Plus" @click="showAdd()" />
+      <!-- 搜索区域 -->
+      <div class="search-area">
+        <el-input
+          v-model="search"
+          placeholder="Please input"
+          class="input-with-select"
+        >
+          <template #prepend>
+            <el-select v-model="select" style="width: 115px">
+              <el-option label="姓名" value="name" />
+              <el-option label="性别" value="gender" />
+              <el-option label="年龄" value="age" />
+              <el-option label="地区" value="area" />
+              <el-option label="邮箱" value="email" />
+            </el-select>
+          </template>
+          <template #append>
+            <el-button :icon="Search" @click="handleSearch()" />
+          </template>
+        </el-input>
+      </div>
+    </el-row>
+    <div class="role-table">
+      <el-table :data="data" height="100%" stripe>
+        <el-table-column type="index" label="序号" width="70" />
+        <el-table-column prop="name" label="姓名" width="150" />
+        <el-table-column prop="gender" label="性别" width="100" />
+        <el-table-column prop="age" label="年龄" width="150" />
+        <el-table-column prop="area" label="地区" width="180" />
+        <el-table-column prop="email" label="邮箱" />
+        <el-table-column align="right">
+          <template #default="scope">
+            <el-button
+              size="small"
+              @click="handleEdit(scope.$index, scope.row)"
+            >
+              Edit
+            </el-button>
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              >Delete</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
-  </el-row>
-  <div class="role-table">
-    <el-table :data="data" height="100%" stripe>
-      <el-table-column type="index" label="序号" width="70" />
-      <el-table-column prop="name" label="姓名" width="150" />
-      <el-table-column prop="gender" label="性别" width="100" />
-      <el-table-column prop="age" label="年龄" width="150" />
-      <el-table-column prop="area" label="地区" width="180" />
-      <el-table-column prop="email" label="邮箱" />
-      <el-table-column align="right">
-        <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-            Edit
-          </el-button>
-          <el-button
-            size="small"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-            >Delete</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+  </el-card>
   <!-- 编辑页面 -->
   <el-dialog :title="dialogTitle" v-model="dialogVisible">
     <el-form v-model="from" label-width="100px">
@@ -67,7 +72,6 @@
       </el-form-item>
     </el-form>
     <div class="dialog-footer">
-      <el-button @click="handleCancel()">取 消</el-button>
       <el-button
         type="primary"
         v-if="dialogTitle == '添加用户'"
@@ -77,6 +81,7 @@
       <el-button type="primary" v-else @click="handleConfirm()"
         >确 定</el-button
       >
+      <el-button @click="handleCancel()">取 消</el-button>
     </div>
   </el-dialog>
 </template>
@@ -152,7 +157,7 @@ const handleConfirm = () => {
 <style scoped>
 .role-table {
   width: 100%;
-  height: 90%;
+  max-height: 90%;
 }
 
 .el-row {

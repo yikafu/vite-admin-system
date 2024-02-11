@@ -1,4 +1,14 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+const others = [
+  {
+    path: "/center",
+    name: "center",
+    isshow: false,
+    component: () => import("views/center.vue"),
+    meta: { title: "个人中心" },
+  },
+];
+
 
 const routes = [
   {
@@ -32,29 +42,34 @@ const routes = [
     meta: { title: "用户管理", icon: "User" },
   },
   {
-    path: "/system",
-    name: "system",
+    path: "/setting",
+    name: "setting",
+    component: () => import("views/setting.vue"),
+    meta: { title: "系统设置", icon: "Tools" },
+  },
+  {
+    path: "/more",
+    name: "more",
     meta: { title: "更多", icon: "More" },
     children: [
       {
-        path: "setting",
-        component: () => import("views/setting.vue"),
-        meta: { title: "系统设置", icon: "Tools" },
-      },
-      {
-        path: "log",
+        path: "/log",
+        name: "log",
         component: () => import("views/log.vue"),
         meta: { title: "系统日志", icon: "Document" },
       },
+      {
+        path: "/about",
+        name: "about",
+        component: () => import("views/about.vue"),
+        meta: { title: "关于", icon: "InfoFilled" },
+      },
     ],
   },
-  {
-    path: "/about",
-    name: "about",
-    component: () => import("views/about.vue"),
-    meta: { title: "关于", icon: "InfoFilled" },
-  },
+  ...others,
 ];
+
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes,

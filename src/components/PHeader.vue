@@ -2,12 +2,18 @@
   <div class="dropdown">
     <el-dropdown>
       <span class="el-dropdown-link">
-          <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" />
+        <el-avatar
+          id="avatar"
+          shape="square"
+          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+        />
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>个人中心</el-dropdown-item>
-          <el-dropdown-item>退出登录</el-dropdown-item>
+          <router-link to="/center">
+            <el-dropdown-item>个人中心</el-dropdown-item>
+          </router-link>
+          <el-dropdown-item @click="handleExit()">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -15,16 +21,27 @@
 </template>
 
 <script setup>
+import { LoginStore } from "@/store/LoginStore";
+import { ElMessage } from "element-plus";
+
+const store = LoginStore();
+const handleExit = () => {
+  ElMessage.error("退出登录");
+  setTimeout(() => {
+    store.setLogin(false);
+    window.location.reload();
+  }, 1000);
+};
 </script>
 
 <style scoped>
-.dropdown{
+.dropdown {
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
 }
-.el-dropdown-link:focus-visible{
+.el-dropdown-link:focus-visible {
   outline: none;
 }
 </style>

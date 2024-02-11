@@ -38,8 +38,8 @@ const userList = {
 };
 
 const form = reactive({
-  username: "",
-  password: "",
+  username: "admin",
+  password: "admin",
 });
 
 const store = LoginStore();

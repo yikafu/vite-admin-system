@@ -11,7 +11,6 @@ export const useTagdataStore = defineStore({
   actions: {
     setTagdata(data) {
       this.tags.push(data);
-      console.log(this.tags);
     },
   },
 });

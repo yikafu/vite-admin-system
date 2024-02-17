@@ -1,27 +1,11 @@
 <template>
   <el-row :gutter="8">
+    <!-- 左侧 -->
     <el-col :span="6">
-      <!-- 左侧 -->
       <el-card>
         <div id="full-area">
-          <div
-            id="avatar"
-            :style="{ backgroundImage: `url('${avatar}')` }"
-          ></div>
-          <div id="info">
-            <li>
-              <el-icon><UserFilled /></el-icon>
-              admin
-            </li>
-            <li>
-              <el-icon><Key /></el-icon>
-              超级管理员
-            </li>
-            <li>
-              <el-icon><ChatDotRound /></el-icon>
-              12345678@gmail.com
-            </li>
-          </div>
+          <img id="avatar" :src="form.avatar" alt="" />
+          <div id="info">暂无个性签名</div>
         </div>
       </el-card>
     </el-col>
@@ -64,22 +48,26 @@
 
   <!-- 对话框 -->
   <el-dialog v-model="dialogData.isshow" :title="dialogData.title" width="500">
-    <template v-if="dialogData.title === '修改用户名'">
-      <el-form label-width="120" label-position="left">
+    <el-form
+      label-width="120"
+      label-position="left"
+      :rules="rules"
+      ref="ruleFormRef"
+      :model="form"
+    >
+      <template v-if="dialogData.title === '修改用户名'">
         <el-form-item label="旧用户名">
           {{ form.username }}
         </el-form-item>
-        <el-form-item label="新用户名">
+        <el-form-item label="新用户名" prop="username">
           <el-input
             v-model="dialogData.value"
             placeholder="请输入新用户名"
           ></el-input>
         </el-form-item>
-      </el-form>
-    </template>
-    <template v-if="dialogData.title === '修改密码'">
-      <el-form label-width="120" label-position="left">
-        <el-form-item label="新密码" required>
+      </template>
+      <template v-if="dialogData.title === '修改密码'">
+        <el-form-item label="新密码" prop="password">
           <el-input
             v-model="dialogData.value"
             type="password"
@@ -87,7 +75,7 @@
             placeholder="请输入新密码"
           ></el-input>
         </el-form-item>
-        <el-form-item label="确认密码" required>
+        <el-form-item label="确认密码">
           <el-input
             v-model="dialogData.value2"
             type="password"
@@ -95,11 +83,9 @@
             placeholder="请再次确认密码"
           ></el-input>
         </el-form-item>
-      </el-form>
-    </template>
-    <template v-if="dialogData.title === '修改密保手机'">
-      <el-form label-width="120" label-position="left">
-        <el-form-item label="新密保手机">
+      </template>
+      <template v-if="dialogData.title === '修改密保手机'">
+        <el-form-item label="新密保手机" prop="phone">
           <el-input
             v-model="dialogData.value"
             placeholder="请输入新的手机号码"
@@ -110,17 +96,16 @@
           <el-input
             style="width: 60%"
             v-model="dialogData.value2"
+            type="phone"
             placeholder="请输入验证码"
           ></el-input>
           <el-button plain @click="handleDisable($event)" :disabled="isAble"
             >获取验证码</el-button
           >
         </el-form-item>
-      </el-form>
-    </template>
-    <template v-if="dialogData.title === '修改密保邮箱'">
-      <el-form label-width="120" label-position="left">
-        <el-form-item label="新密保邮箱">
+      </template>
+      <template v-if="dialogData.title === '修改密保邮箱'">
+        <el-form-item label="新密保邮箱" prop="email">
           <el-input
             v-model="dialogData.value"
             placeholder="请输入新的 Email 地址"
@@ -137,25 +122,22 @@
             >获取验证码</el-button
           >
         </el-form-item>
-      </el-form>
-    </template>
-    <el-button type="primary" @click="handleConfirm()">确 定</el-button>
-    <el-button @click="dialogData.isshow = false">取 消</el-button>
+      </template>
+    </el-form>
+
+    <el-button type="primary" @click="handleConfirm(ruleFormRef)">确 定</el-button>
+    <el-button @click="clearValue()">取 消</el-button>
   </el-dialog>
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, watch } from "vue";
+import { ref, reactive } from "vue";
+import userData from "@/data/user.data.js";
 import { ElMessage } from "element-plus";
 
-const avatar = ref("");
 const isAble = ref(false);
 const form = reactive({
-  username: "admin",
-  password: "123456",
-  phone: "1234567890",
-  email: "1234567890@gamil.com",
-  quaction: false,
+  ...userData
 });
 
 const dialogData = reactive({
@@ -166,27 +148,40 @@ const dialogData = reactive({
   value2: null,
 });
 
-onMounted(() => {
-  avatar.value = document.getElementById("avatar").children[0].src;
-  clearValue();
-});
+const ruleFormRef = ref(null);
+const rules = {
+  username: [
+    { required: true, message: "请输入用户名", trigger: "blur" },
+    { min: 3, max: 16, message: "长度在 3 到 16 个字符", trigger: "blur" },
+  ],
+  password: [
+    { required: true, message: "请输入密码", trigger: "blur" },
+    { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" },
+  ],
+  phone: [
+    { required: true, message: "请输入手机号码", trigger: "blur" },
+    {
+      pattern: /^1[3-9]\d{9}$/,
+      message: "请输入正确的手机号码",
+      trigger: "blur",
+    },
+  ],
+  email: [
+    { required: true, message: "请输入 Email 地址", trigger: "blur" },
+    {
+      type: "email",
+      message: "请输入正确的 Email 地址",
+      trigger: "blur",
+    },
+  ],
+};
 
 const clearValue = () => {
-  // 监听对话框的显示状态, 当对话框关闭时, 重置对话框数据
-  watch(
-    () => dialogData.isshow,
-    (newVal) => {
-      if (!newVal) {
-        Object.assign(dialogData, {
-          isshow: false,
-          title: "",
-          key: "",
-          value: null,
-          value2: null,
-        });
-      }
-    }
-  );
+  dialogData.isshow = false;
+  dialogData.title = "";
+  dialogData.key = "";
+  dialogData.value = null;
+  dialogData.value2 = null;
 };
 
 const handleTitle = (key) => {
@@ -248,15 +243,18 @@ const handleDisable = (e) => {
 };
 
 const handleConfirm = () => {
-  if (dialogData.title === "修改密码") {
-    if (ConfirmPassword()) {
+
+
+  if (!ruleFormRef.value) return;
+  ruleFormRef.value.validate((valid) => {
+    if (valid) {
       form[dialogData.key] = dialogData.value;
       dialogData.isshow = false;
+      clearValue();
+    } else {
+      console.log("error submit!");
     }
-  } else {
-    form[dialogData.key] = dialogData.value;
-    dialogData.isshow = false;
-  }
+  });
 };
 </script>
 
@@ -298,10 +296,10 @@ li {
   display: block;
   border-bottom: 1px solid #d6d8db;
 }
-::v-deep .el-form-item__label {
+::v-deep(.el-form-item__label) {
   font-size: 1rem;
 }
-::v-deep .el-form-item__content {
+::v-deep(.el-form-item__content) {
   justify-content: space-between;
 }
 .a {

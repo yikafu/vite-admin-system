@@ -1,84 +1,3 @@
-const dashboardTable = [
-  {
-    name: "iPhone 14 Pro Max",
-    "d-sale": 1000,
-    "m-sale": 10000,
-    "all-sale": 100000,
-  },
-  {
-    name: "小米12 Pro",
-    "d-sale": 800,
-    "m-sale": 8000,
-    "all-sale": 80000,
-  },
-  {
-    name: "华为P50 Pro",
-    "d-sale": 600,
-    "m-sale": 6000,
-    "all-sale": 60000,
-  },
-  {
-    name: "iPad Pro 2024",
-    "d-sale": 500,
-    "m-sale": 5000,
-    "all-sale": 50000,
-  },
-  {
-    name: "MacBook Pro 2024",
-    "d-sale": 400,
-    "m-sale": 4000,
-    "all-sale": 40000,
-  },
-  {
-    name: "AirPods Pro 2",
-    "d-sale": 300,
-    "m-sale": 3000,
-    "all-sale": 30000,
-  },
-  {
-    name: "Apple Watch Series 8",
-    "d-sale": 200,
-    "m-sale": 2000,
-    "all-sale": 20000,
-  },
-  {
-    name: "iPhone 14",
-    "d-sale": 100,
-    "m-sale": 1000,
-    "all-sale": 10000,
-  },
-  {
-    name: "小米12",
-    "d-sale": 80,
-    "m-sale": 800,
-    "all-sale": 8000,
-  },
-  {
-    name: "华为P50",
-    "d-sale": 60,
-    "m-sale": 600,
-    "all-sale": 6000,
-  },
-  {
-    name: "iPad Air 2024",
-    "d-sale": 50,
-    "m-sale": 500,
-    "all-sale": 5000,
-  },
-  {
-    name: "MacBook Air 2024",
-    "d-sale": 40,
-    "m-sale": 400,
-    "all-sale": 4000,
-  },
-  {
-    name: "AirPods 3",
-    "d-sale": 30,
-    "m-sale": 300,
-    "all-sale": 3000,
-  },
-];
-
 const dashboardChart = [
   {
     name: "iPhone 系列",
@@ -123,7 +42,6 @@ const activeUserChart = [
 ];
 
 export {
-  dashboardTable,
   dashboardChart,
   conversionChart,
   activeUserChart,

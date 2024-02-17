@@ -5,7 +5,7 @@
 
   <template v-else>
     <el-container>
-      <el-aside width="200px">
+      <el-aside>
         <PAside />
       </el-aside>
       <el-container>
@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-import { watch, onMounted, ref } from "vue";
 import PHeader from "./components/PHeader.vue";
 import PAside from "./components/PAside.vue";
 import PMain from "./components/PMain.vue";
@@ -29,8 +28,7 @@ import PLogin from "./components/PLogin.vue";
 
 import { LoginStore } from "@/store/LoginStore";
 const store = LoginStore();
-const isLogin = ref(store.isLogin);
-
+const isLogin = store.isLogin;
 </script>
 
 <style>
@@ -44,6 +42,7 @@ const isLogin = ref(store.isLogin);
 }
 
 .el-aside {
+  width: 200px;
   background-color: #1e2732;
   line-height: 200px;
   text-align: center;
@@ -54,5 +53,20 @@ const isLogin = ref(store.isLogin);
 .el-main {
   background-color: var(--gary-color);
   color: #333;
+}
+
+@media (max-width: 1200px) {
+  .el-aside {
+    width: 80px;
+    background-color: #1e2732;
+    line-height: 200px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 900px) {
+  .el-aside {
+    display: none;
+  }
 }
 </style>

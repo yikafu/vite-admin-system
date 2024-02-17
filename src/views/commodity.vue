@@ -50,35 +50,34 @@
     </div>
   </el-card>
   <!-- 编辑页面 -->
-  <el-dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form v-model="from" label-width="100px">
-      <el-form-item label="商品名称">
-        <el-input v-model="from.data.name" />
+  <el-dialog :title="dialogState.title" v-model="dialogState.visible">
+    <el-form
+      :model="form.data"
+      label-width="100px"
+      :rules="rules"
+      ref="ruleFormRef"
+    >
+      <el-form-item label="商品名称" prop="name">
+        <el-input v-model="form.data.name" />
       </el-form-item>
-      <el-form-item label="商品价格">
-        <el-input v-model="from.data.price" />
+      <el-form-item label="商品价格" prop="price">
+        <el-input v-model.number="form.data.price" />
       </el-form-item>
-      <el-form-item label="商品库存">
-        <el-input v-model="from.data.stock" />
+      <el-form-item label="商品库存" prop="stock">
+        <el-input v-model.number="form.data.stock" />
       </el-form-item>
-      <el-form-item label="商品ID">
-        <el-input v-model="from.data.id" />
-      </el-form-item>
-      <el-form-item label="数据位置" v-if="dialogTitle == '添加商品'">
-        <el-radio-group v-model="radio">
-          <el-radio label="1">首行添加</el-radio>
-          <el-radio label="2">尾行添加</el-radio>
-        </el-radio-group>
+      <el-form-item label="商品ID" prop="id">
+        <el-input v-model="form.data.id" />
       </el-form-item>
     </el-form>
     <div class="dialog-footer">
       <el-button
         type="primary"
-        v-if="dialogTitle == '添加商品'"
-        @click="handleAdd()"
+        v-if="dialogState.title == '添加商品'"
+        @click="handleAdd(ruleFormRef)"
         >确 定</el-button
       >
-      <el-button type="primary" v-else @click="handleConfirm()"
+      <el-button type="primary" v-else @click="handleConfirm(ruleFormRef)"
         >确 定</el-button
       >
       <el-button @click="handleCancel()">取 消</el-button>
@@ -99,29 +98,53 @@ import commodityData from "@/data/commodity.data.js";
 import { onMounted, reactive, ref, watch } from "vue";
 import { Plus, Search, Delete } from "@element-plus/icons-vue";
 
+// data是呈现在页面上的总数据（分页后的数据）
 const data = ref();
+// 分页器的状态
 const state = reactive({
   index: 1,
   limit: 10,
   total: commodityData.length,
 });
-
-const dialogTitle = ref("编辑商品");
-const dialogVisible = ref(false);
-const from = reactive({
+// 弹窗的状态 title和visible
+const dialogState = ref({
+  title: "",
+  visible: false,
+});
+//
+const form = reactive({
   index: 0,
   data: {},
 });
 const search = ref("");
 const select = ref("name");
-const radio = ref("1");
 
+const ruleFormRef = ref(null);
+const validateNumber = (rule, value, callback) => {
+  if (value < 0) {
+    callback(new Error("仅可输入不小于0的数字"));
+  } else {
+    callback();
+  }
+};
+const rules = {
+  name: [{ required: true, message: "请输入商品名称", trigger: "blur" }],
+  price: [
+    { required: true, message: "请输入商品价格", trigger: "blur" },
+    { validator: validateNumber, trigger: "blur", type: "number" },
+  ],
+  stock: [
+    { required: true, message: "请输入商品库存", trigger: "blur" },
+    { validator: validateNumber, trigger: "blur", type: "number" },
+  ],
+  id: [{ required: true, message: "请输入商品ID", trigger: "blur" }],
+};
 onMounted(() => {
   handleSizeChange(1);
-  // 监听dialogVisible的变化, 当dialogVisible为false时, 清空from.data
-  watch(dialogVisible, (newVal) => {
+  // 监听dialogVisible.visible的变化, 当dialogVisible.visible为false时, 清空form.data
+  watch(dialogState.value.visible, (newVal) => {
     if (!newVal) {
-      from.data = {};
+      form.data = {};
     }
   });
 });
@@ -130,22 +153,23 @@ onMounted(() => {
 const handleSizeChange = (val) => {
   data.value = commodityData.slice((val - 1) * state.limit, val * state.limit);
 };
-
 // 展示添加窗口
 const showAdd = () => {
   console.log("add");
-  dialogTitle.value = "添加商品";
-  dialogVisible.value = true;
+  dialogState.value.title = "添加商品";
+  dialogState.value.visible = true;
 };
 // 确定添加
 const handleAdd = () => {
-  // 判断插入数据方式
-  if (radio.value == "1") {
-    data.value.unshift({ ...from.data }); // 首行插入
-  } else if (radio.value == "2") {
-    data.value.push({ ...from.data }); // 尾行插入
-  }
-  dialogVisible.value = false;
+  if (!ruleFormRef.value) return;
+  ruleFormRef.value.validate((valid) => {
+    if (valid) {
+      data.value.unshift({ ...form.data }); // 首行插入
+      dialogState.value.visible = false;
+    } else {
+      console.log("error submit!");
+    }
+  });
 };
 // 搜索函数
 const handleSearch = () => {
@@ -158,10 +182,10 @@ const handleSearch = () => {
 };
 // 编辑窗口
 const handleEdit = (index, row) => {
-  dialogTitle.value = "编辑商品";
-  dialogVisible.value = true;
-  from.index = index;
-  from.data = { ...row };
+  dialogState.value.title = "编辑商品";
+  dialogState.value.visible = true;
+  form.index = index;
+  form.data = { ...row };
 };
 // 删除按钮
 const handleDelete = (index, row) => {
@@ -170,12 +194,19 @@ const handleDelete = (index, row) => {
 };
 // 取消按钮
 const handleCancel = () => {
-  dialogVisible.value = false;
+  dialogState.value.visible = false;
 };
 // 确认修改
 const handleConfirm = () => {
-  data.value[from.index] = { ...from.data }; // 根据index来更新数据
-  dialogVisible.value = false;
+  if (!ruleFormRef.value) return;
+  ruleFormRef.value.validate((valid) => {
+    if (valid) {
+      data.value[form.index] = { ...form.data };
+      dialogState.value.visible = false;
+    } else {
+      console.log("error submit!");
+    }
+  });
 };
 </script>
 

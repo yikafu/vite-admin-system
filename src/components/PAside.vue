@@ -8,7 +8,7 @@
           <el-icon>
             <component :is="item.meta.icon"></component>
           </el-icon>
-          {{ item.meta.title }}
+          <span id="aside-hidden">{{ item.meta.title }}</span>
         </el-menu-item>
       </template>
       <!-- 有子节点的 -->
@@ -18,14 +18,14 @@
             <el-icon>
               <component :is="item.meta.icon"></component>
             </el-icon>
-            <span>{{ item.meta.title }}</span>
+            <span id="aside-hidden">{{ item.meta.title }}</span>
           </template>
           <el-menu-item-group v-for="child in item.children" :key="child.path">
             <el-menu-item :index="child.path">
               <el-icon>
                 <component :is="child.meta.icon"></component>
               </el-icon>
-              {{ child.meta.title }}
+              <span id="aside-hidden">{{ child.meta.title }}</span>
             </el-menu-item>
           </el-menu-item-group>
         </el-sub-menu>
@@ -57,7 +57,7 @@ onMounted(() => {
   background-color: var(--dark-color);
 }
 .el-sub-menu__title {
-  color: var(--light-color) !important;
+  color: var(--light-color);
 }
 
 .el-menu-item:hover {
@@ -67,5 +67,17 @@ onMounted(() => {
 .el-sub-menu__title:hover {
   background-color: var(--primary-color);
   color: var(--light-color);
+}
+
+@media (max-width: 1200px) {
+  #aside-hidden {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  #aside-hidden {
+    display: inline;
+  }
 }
 </style>

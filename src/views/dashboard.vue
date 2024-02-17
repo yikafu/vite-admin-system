@@ -1,43 +1,4 @@
 <template>
-  <!-- 小卡片区域 -->
-  <el-row :gutter="15">
-    <el-col :span="6">
-      <el-card id="ant-card">
-        <div id="title">今日访问量</div>
-        <div id="data">
-          1000
-          <img src="@/assets/shop.svg" alt="" />
-        </div>
-      </el-card>
-    </el-col>
-    <el-col :span="6">
-      <el-card id="ant-card">
-        <div id="title">今日下单数</div>
-        <div id="data">
-          1000
-          <img src="@/assets/sale.svg" alt="" />
-        </div>
-      </el-card>
-    </el-col>
-    <el-col :span="6">
-      <el-card id="ant-card">
-        <div id="title">今日成交数</div>
-        <div id="data">
-          1000
-          <img src="@/assets/pay.svg" alt="" />
-        </div>
-      </el-card>
-    </el-col>
-    <el-col :span="6">
-      <el-card id="ant-card">
-        <div id="title">今日销售额</div>
-        <div id="data">
-          1000
-          <img src="@/assets/money.svg" alt="" />
-        </div>
-      </el-card>
-    </el-col>
-  </el-row>
   <!-- 折线图 -->
   <el-row>
     <el-col :span="24">
@@ -256,19 +217,6 @@ onMounted(() => {
 }
 .el-col {
   border-radius: 4px;
-}
-#ant-card {
-  height: 110px;
-}
-#ant-card #data {
-  height: 50px;
-  font-size: 28px;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #1890ff;
-  margin-bottom: 10px;
-  line-height: 1.5;
-  display: flex;
-  justify-content: space-between;
 }
 #title {
   font-size: 16px;

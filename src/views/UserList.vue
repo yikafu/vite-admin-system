@@ -54,31 +54,39 @@
   </el-card>
   <!-- 编辑页面 -->
   <el-dialog :title="dialogTitle" v-model="dialogVisible">
-    <el-form v-model="from" label-width="100px">
-      <el-form-item label="姓名">
-        <el-input v-model="from.data.name" />
+    <el-form
+      :model="form.data"
+      label-width="100px"
+      ref="ruleFormRef"
+      :rules="rules"
+    >
+      <el-form-item label="姓名" prop="name">
+        <el-input v-model="form.data.name" />
       </el-form-item>
-      <el-form-item label="性别">
-        <el-input v-model="from.data.gender" />
+      <el-form-item label="性别" prop="gender">
+        <el-radio-group v-model="form.data.gender">
+          <el-radio label="男">男</el-radio>
+          <el-radio label="女">女</el-radio>
+        </el-radio-group>
       </el-form-item>
-      <el-form-item label="年龄">
-        <el-input v-model="from.data.age" />
+      <el-form-item label="年龄" prop="age">
+        <el-input v-model.number="form.data.age" />
       </el-form-item>
-      <el-form-item label="地区">
-        <el-input v-model="from.data.area" />
+      <el-form-item label="地区" prop="area">
+        <el-input v-model="form.data.area" />
       </el-form-item>
-      <el-form-item label="邮箱">
-        <el-input v-model="from.data.email" />
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="form.data.email" />
       </el-form-item>
     </el-form>
     <div class="dialog-footer">
       <el-button
         type="primary"
         v-if="dialogTitle == '添加用户'"
-        @click="handleAdd()"
+        @click="handleAdd(ruleFormRef)"
         >确 定</el-button
       >
-      <el-button type="primary" v-else @click="handleConfirm()"
+      <el-button type="primary" v-else @click="handleConfirm(ruleFormRef)"
         >确 定</el-button
       >
       <el-button @click="handleCancel()">取 消</el-button>
@@ -87,26 +95,45 @@
 </template>
 
 <script setup>
-import user from "@/data/user.data.js";
+import userlist from "@/data/userlist.data.js";
 import { onMounted, watch, reactive, ref } from "vue";
 import { Plus, Search, Delete } from "@element-plus/icons-vue";
 
-const data = ref(user);
-
+const data = ref(userlist);
 const dialogTitle = ref("添加用户");
 const dialogVisible = ref(false);
-const from = reactive({
+const form = reactive({
   index: 0,
   data: {},
 });
 const search = ref("");
 const select = ref("name");
+const ruleFormRef = ref(null);
 
+const rules = {
+  name: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
+  age: [
+    { required: true, message: "请输入年龄", trigger: "blur" },
+    {
+      validator: (rule, value, callback) => {
+        if (!(value < 100 && value >= 18)) {
+          callback(new Error("年龄必须在18-100之间"));
+        } else {
+          callback();
+        }
+      },
+      trigger: "blur",
+      type: "number",
+    },
+  ],
+  area: [{ required: true, message: "请输入地区", trigger: "blur" }],
+  email: [{ required: true, message: "请输入邮箱", trigger: "blur", type: "email" }],
+};
 onMounted(() => {
   // 监听dialogVisible的变化, 当dialogVisible为false时, 清空from.data
   watch(dialogVisible, (newVal) => {
     if (!newVal) {
-      from.data = {};
+      form.data = {};
     }
   });
 });
@@ -119,15 +146,22 @@ const showAdd = () => {
 };
 // 确定添加
 const handleAdd = () => {
-  data.value.push({ ...from.data }); // 尾行插入
-  dialogVisible.value = false;
+  if (!ruleFormRef.value) return;
+  ruleFormRef.value.validate((valid) => {
+    if (valid) {
+      data.value.push({ ...form.data });
+      dialogVisible.value = false;
+    } else {
+      console.log("error submit!");
+    }
+  });
 };
 // 搜索函数
 const handleSearch = () => {
   const key = select.value;
   const searchString = search.value.toString();
   // 使用filter方法过滤源数据
-  data.value = user.filter((item) => {
+  data.value = userlist.filter((item) => {
     return item[key].toString().includes(searchString);
   });
 };
@@ -135,8 +169,8 @@ const handleSearch = () => {
 const handleEdit = (index, row) => {
   dialogTitle.value = "编辑";
   dialogVisible.value = true;
-  from.index = index;
-  from.data = { ...row };
+  form.index = index;
+  form.data = { ...row };
 };
 // 删除按钮
 const handleDelete = (index, row) => {
@@ -149,8 +183,15 @@ const handleCancel = () => {
 };
 // 确认修改
 const handleConfirm = () => {
-  data.value[from.index] = { ...from.data }; // 根据index来更新数据
-  dialogVisible.value = false;
+  if (!ruleFormRef.value) return;
+  ruleFormRef.value.validate((valid) => {
+    if (valid) {
+      data.value[form.index] = { ...form.data };
+      dialogVisible.value = false;
+    } else {
+      console.log("error submit!");
+    }
+  });
 };
 </script>
 

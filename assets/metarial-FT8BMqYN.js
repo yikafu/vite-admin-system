@@ -1,1 +1,0 @@
-import{W as e,o as t,g as o,Y as s}from"./index-1BDfcxEQ.js";const a={},c=s("h1",null,"Metarial",-1),n=[c];function r(_,l,i,d,p,f){return t(),o("div",null,n)}const m=e(a,[["render",r]]);export{m as default};

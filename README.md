@@ -1,7 +1,12 @@
-# Vue 3 + Vite
+基于 vue3 和 element plus 的后台系统模板      
+使用echart绘制图表📊，pinia实现数据持久化
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 项目依赖
 
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- node版本: v18.13.0
+- yarn版本：1.22.19
+- "vite": "^5.0.8"
+- "echarts": "^5.4.3",
+- "element-plus": "^2.5.2",
+- "pinia": "^2.1.7",
+- "vue": "^3.3.11",

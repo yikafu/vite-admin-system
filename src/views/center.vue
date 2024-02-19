@@ -48,18 +48,12 @@
 
   <!-- 对话框 -->
   <el-dialog v-model="dialogData.isshow" :title="dialogData.title" width="500">
-    <el-form
-      label-width="120"
-      label-position="left"
-      :rules="rules"
-      ref="ruleFormRef"
-      :model="form"
-    >
+    <el-form label-width="120" label-position="left">
       <template v-if="dialogData.title === '修改用户名'">
         <el-form-item label="旧用户名">
           {{ form.username }}
         </el-form-item>
-        <el-form-item label="新用户名" prop="username">
+        <el-form-item label="新用户名" required>
           <el-input
             v-model="dialogData.value"
             placeholder="请输入新用户名"
@@ -67,7 +61,7 @@
         </el-form-item>
       </template>
       <template v-if="dialogData.title === '修改密码'">
-        <el-form-item label="新密码" prop="password">
+        <el-form-item label="新密码" required>
           <el-input
             v-model="dialogData.value"
             type="password"
@@ -75,7 +69,7 @@
             placeholder="请输入新密码"
           ></el-input>
         </el-form-item>
-        <el-form-item label="确认密码">
+        <el-form-item label="确认密码" required>
           <el-input
             v-model="dialogData.value2"
             type="password"
@@ -85,47 +79,54 @@
         </el-form-item>
       </template>
       <template v-if="dialogData.title === '修改密保手机'">
-        <el-form-item label="新密保手机" prop="phone">
+        <el-form-item label="新密保手机" required>
           <el-input
             v-model="dialogData.value"
+            type="tel"
             placeholder="请输入新的手机号码"
           ></el-input>
         </el-form-item>
         <!-- 验证码 -->
-        <el-form-item label="验证码">
+        <el-form-item label="验证码" required>
           <el-input
             style="width: 60%"
             v-model="dialogData.value2"
-            type="phone"
             placeholder="请输入验证码"
           ></el-input>
-          <el-button plain @click="handleDisable($event)" :disabled="isAble"
-            >获取验证码</el-button
+          <el-button
+            id="phoneState"
+            plain
+            @click="handleDisable1"
+            :disabled="phoneState.isAble"
+            >{{ phoneState.contain }}</el-button
           >
         </el-form-item>
       </template>
       <template v-if="dialogData.title === '修改密保邮箱'">
-        <el-form-item label="新密保邮箱" prop="email">
+        <el-form-item label="新密保邮箱" required>
           <el-input
             v-model="dialogData.value"
+            type="email"
             placeholder="请输入新的 Email 地址"
           ></el-input>
         </el-form-item>
         <!-- 验证码 -->
-        <el-form-item label="验证码">
+        <el-form-item label="验证码" required>
           <el-input
             style="width: 60%"
             v-model="dialogData.value2"
             placeholder="请输入验证码"
           ></el-input>
-          <el-button plain @click="handleDisable($event)" :disabled="isAble"
-            >获取验证码</el-button
+          <el-button
+            plain
+            @click="handleDisable2"
+            :disabled="emailState.isAble"
+            >{{ emailState.contain }}</el-button
           >
         </el-form-item>
       </template>
     </el-form>
-
-    <el-button type="primary" @click="handleConfirm(ruleFormRef)">确 定</el-button>
+    <el-button type="primary" @click="handleConfirm()">确 定</el-button>
     <el-button @click="clearValue()">取 消</el-button>
   </el-dialog>
 </template>
@@ -135,9 +136,16 @@ import { ref, reactive } from "vue";
 import userData from "@/data/user.data.js";
 import { ElMessage } from "element-plus";
 
-const isAble = ref(false);
-const form = reactive({
-  ...userData
+const phoneState = ref({
+  isAble: false,
+  contain: "获取验证码",
+});
+const emailState = ref({
+  isAble: false,
+  contain: "获取验证码",
+});
+const form = ref({
+  ...userData,
 });
 
 const dialogData = reactive({
@@ -147,34 +155,6 @@ const dialogData = reactive({
   value: null,
   value2: null,
 });
-
-const ruleFormRef = ref(null);
-const rules = {
-  username: [
-    { required: true, message: "请输入用户名", trigger: "blur" },
-    { min: 3, max: 16, message: "长度在 3 到 16 个字符", trigger: "blur" },
-  ],
-  password: [
-    { required: true, message: "请输入密码", trigger: "blur" },
-    { min: 6, max: 16, message: "长度在 6 到 16 个字符", trigger: "blur" },
-  ],
-  phone: [
-    { required: true, message: "请输入手机号码", trigger: "blur" },
-    {
-      pattern: /^1[3-9]\d{9}$/,
-      message: "请输入正确的手机号码",
-      trigger: "blur",
-    },
-  ],
-  email: [
-    { required: true, message: "请输入 Email 地址", trigger: "blur" },
-    {
-      type: "email",
-      message: "请输入正确的 Email 地址",
-      trigger: "blur",
-    },
-  ],
-};
 
 const clearValue = () => {
   dialogData.isshow = false;
@@ -202,14 +182,24 @@ const handleEdit = (key) => {
   dialogData.title = handleTitle(key);
   dialogData.key = key;
 };
-
+//  编辑密保问题
 const handleEditQuaction = () => {
   console.log("编辑密保问题");
   ElMessage.warning("暂不支持编辑密保问题");
 };
-
+// 表单校验规则
+const confirmUsername = () => {
+  if (!dialogData.value) {
+    ElMessage.error("请输入新用户名");
+  } else if (dialogData.value === form.username) {
+    ElMessage.error("新用户名不能与旧用户名相同");
+  } else if (dialogData.value.length < 6 || dialogData.value.length > 16) {
+    ElMessage.error("用户名长度不能小于6位或大于16位");
+  } else {
+    return true;
+  }
+};
 const ConfirmPassword = () => {
-  // 进行表单校验
   const { value, value2 } = dialogData;
   if (!value) {
     ElMessage.error("请输入新密码");
@@ -227,34 +217,86 @@ const ConfirmPassword = () => {
     return true;
   }
 };
-
-const handleDisable = (e) => {
-  isAble.value = true;
+const ConfirmPhone = () => {
+  const { value, value2 } = dialogData;
+  if (!value) {
+    ElMessage.error("请输入新的手机号码");
+  } else if (value === form.phone) {
+    ElMessage.error("新手机号码不能与旧手机号码相同");
+  } else if (!value2) {
+    ElMessage.error("请输入验证码");
+  } else {
+    return true;
+  }
+};
+const ConfirmEmail = () => {
+  const { value, value2 } = dialogData;
+  if (!value) {
+    ElMessage.error("请输入新的 Email 地址");
+  } else if (value === form.email) {
+    ElMessage.error("新 Email 地址不能与旧 Email 地址相同");
+  } else if (!value2) {
+    ElMessage.error("请输入验证码");
+  } else {
+    return true;
+  }
+};
+// 控制验证码按钮
+const handleDisable1 = () => {
+  phoneState.value.isAble = true;
   let time = 30;
   const timer = setInterval(() => {
     time--;
-    e.target.innerText = `${time}s后重新获取`;
+    phoneState.value.contain = `${time}s后重新获取`;
     if (time === 0) {
       clearInterval(timer);
-      e.target.innerText = "获取验证码";
-      isAble.value = false;
+      phoneState.value.contain = "获取验证码";
+      phoneState.value.isAble = false;
     }
   }, 1000);
 };
-
-const handleConfirm = () => {
-
-
-  if (!ruleFormRef.value) return;
-  ruleFormRef.value.validate((valid) => {
-    if (valid) {
-      form[dialogData.key] = dialogData.value;
-      dialogData.isshow = false;
-      clearValue();
-    } else {
-      console.log("error submit!");
+const handleDisable2 = () => {
+  emailState.value.isAble = true;
+  let time = 30;
+  const timer = setInterval(() => {
+    time--;
+    emailState.value.contain = `${time}s后重新获取`;
+    if (time === 0) {
+      clearInterval(timer);
+      emailState.value.contain = "获取验证码";
+      emailState.value.isAble = false;
     }
-  });
+  }, 1000);
+};
+// 确认修改
+const handleConfirm = () => {
+  const { key } = dialogData;
+  switch (key) {
+    case "username":
+      if (confirmUsername()) {
+        form.value.username = dialogData.value;
+        clearValue();
+      }
+      break;
+    case "password":
+      if (ConfirmPassword()) {
+        form.value.password = dialogData.value;
+        clearValue();
+      }
+      break;
+    case "phone":
+      if (ConfirmPhone()) {
+        form.value.phone = dialogData.value;
+        clearValue();
+      }
+      break;
+    case "email":
+      if (ConfirmEmail()) {
+        form.value.email = dialogData.value;
+        clearValue();
+      }
+      break;
+  }
 };
 </script>
 
